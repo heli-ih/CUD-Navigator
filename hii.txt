@@ -1,0 +1,310 @@
+import { useRouter } from "next/router";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import React, { useState, useRef, useEffect } from "react";
+import { Vector3 } from "three";
+
+function Model() {
+  const map = useGLTF("/HUB_GF_3D.glb");
+
+  return (
+    <mesh>
+      <hemisphereLight intensity={1} groundColor="black" />
+      <primitive object={map.scene} position={[-107, -5, -2]} />
+    </mesh>
+  );
+}
+
+function Locations() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [cameraPosition, setCameraPosition] = useState<Vector3>(
+    new Vector3(0, 3, 45)
+  );
+  const [targetPositions, setTargetPositions] = useState<Vector3[]>([
+    new Vector3(0, 0, 0),
+    new Vector3(0, 0, 0),
+    // new Vector3(0, 0, -1),
+    // new Vector3(0, 0, -1.5),
+    // new Vector3(15, 5, 10),
+  ]);
+  const [currentTargetIndex, setCurrentTargetIndex] = useState(0);
+  const currentTargetPosition = targetPositions[currentTargetIndex];
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  const animationDuration = 5000; // in milliseconds
+
+  const elapsedTimeRef = useRef(0);
+
+  useEffect(() => {
+    let requestId: number;
+    let startTime: number;
+
+    const updateCameraPosition = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = (timestamp - startTime) / animationDuration;
+      const t = Math.min(1, progress);
+
+      if (currentTargetPosition) {
+        setCameraPosition((prev) =>
+          prev.clone().lerp(currentTargetPosition, t)
+        );
+      }
+
+      if (progress >= 1) {
+        setCurrentTargetIndex((prevIndex) => prevIndex + 1);
+        startTime = timestamp;
+
+        if (currentTargetIndex >= targetPositions.length - 1) {
+          setIsAnimating(false); // Stop animation when reaching the end
+        } else {
+          requestId = requestAnimationFrame(updateCameraPosition);
+        }
+      } else {
+        requestId = requestAnimationFrame(updateCameraPosition);
+      }
+    };
+
+    if (isAnimating) {
+      updateCameraPosition(performance.now());
+    }
+
+    return () => {
+      cancelAnimationFrame(requestId);
+    };
+  }, [
+    targetPositions,
+    currentTargetPosition,
+    currentTargetIndex,
+    animationDuration,
+    isAnimating,
+  ]);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1>Location Page</h1>
+      <p>Faculty ID: {id}</p>
+
+      <Canvas
+        frameloop="demand" //rendering updates are triggered only when there is a demand for them. This can be useful for optimizing performance
+        className="mt-4"
+        style={{ height: "80vh", width: "100vw" }}
+      >
+        <OrbitControls />
+        <ambientLight intensity={0.5} />
+        <directionalLight intensity={0.5} position={[1, 2, 2]} />
+        <PerspectiveCamera
+          makeDefault
+          fov={10}
+          near={10}
+          position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+        />
+        <Model />
+      </Canvas>
+    </div>
+  );
+}
+
+export default Locations;
+
+
+//---------------------------------------------------------------------------------
+
+
+
+import { useRouter } from "next/router";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import React, { useState, useRef, useEffect } from "react";
+import { Vector3 } from "three";
+
+function Model() {
+  const map = useGLTF("/HUB_GF_3D.glb");
+
+  return (
+    <mesh>
+      <hemisphereLight intensity={1} groundColor="black" />
+      <primitive object={map.scene} position={[-107, -1, 15]} />
+    </mesh>
+  );
+}
+
+function Locations() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [cameraPosition, setCameraPosition] = useState<Vector3>(
+    new Vector3(20, 4, 35)
+  );
+
+  const targetPosition = new Vector3(0, 0, 10);
+  const animationDuration = 3000; // in milliseconds
+
+  const elapsedTimeRef = useRef(0);
+
+  useEffect(() => {
+    let requestId: number;
+
+    const updateCameraPosition = () => {
+      const currentTime = performance.now();
+      const deltaTime = currentTime - elapsedTimeRef.current;
+      elapsedTimeRef.current = currentTime; //ensuring that it holds the most recent timestamp for the next frame calculation
+
+      const t = Math.min(1, deltaTime / animationDuration); //ensures that t does not exceed 1, preventing it from going beyond the completion of the animation.
+
+      setCameraPosition((prev) => prev.clone().lerp(targetPosition, t));
+
+      if (t < 1) {
+        requestId = requestAnimationFrame(updateCameraPosition);
+      }
+    };
+
+    updateCameraPosition();
+
+    return () => {
+      cancelAnimationFrame(requestId);
+    };
+  }, [targetPosition, animationDuration]);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1>Location Page</h1>
+      <p>Faculty ID: {id}</p>
+
+      <Canvas
+        frameloop="demand" //rendering updates are triggered only when there is a demand for them. This can be useful for optimizing performance
+        className="mt-4"
+        style={{ height: "80vh", width: "100vw" }}
+      >
+        <OrbitControls />
+        <ambientLight intensity={0.5} />
+        <directionalLight intensity={0.5} position={[1, 2, 2]} />
+        <PerspectiveCamera
+          makeDefault
+          fov={10}
+          near={10}
+          position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+        />
+        <Model />
+      </Canvas>
+    </div>
+  );
+}
+
+export default Locations;
+
+
+
+//---------------------------------------------------------------------------------
+
+
+import { useRouter } from "next/router";
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import React, { useState, useRef, useEffect } from "react";
+import { Vector3 } from "three";
+
+function Model() {
+  const map = useGLTF("/HUB_GF_3D.glb");
+
+  return (
+    <mesh>
+      <hemisphereLight intensity={1} groundColor="black" />
+      <primitive object={map.scene} position={[-107, -1, 15]} />
+    </mesh>
+  );
+}
+
+function Locations() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  const [cameraPosition, setCameraPosition] = useState<Vector3>(
+    new Vector3(0, 3, 45)
+  );
+  const [mapPosition, setMapPosition] = useState<Vector3>(
+    new Vector3(-107, -1, 15)
+  );
+
+  const animationDuration = 5000; // 5 seconds for each animation stage
+  const elapsedTimeRef = useRef(0);
+
+  const animationStages = [
+    { map: new Vector3(-107, -1, 3), camera: new Vector3(0, -25, -14) },
+    { map: new Vector3(-90, -1, 15), camera: new Vector3(10, -25, -14) },
+    // Add more stages as needed
+  ];
+
+  let currentStageIndex = 0;
+
+  useEffect(() => {
+    let requestId: number;
+
+    const updatePosition = () => {
+      const currentTime = performance.now();
+      const deltaTime = currentTime - elapsedTimeRef.current;
+      elapsedTimeRef.current = currentTime;
+
+      const t = Math.min(1, deltaTime / animationDuration);
+
+      if (currentStageIndex % 2 === 0) {
+        // Even stages update the map position
+        setMapPosition((prev) =>
+          prev.clone().lerp(animationStages[currentStageIndex].map, t)
+        );
+      } else {
+        // Odd stages update the camera position
+        setCameraPosition((prev) =>
+          prev.clone().lerp(animationStages[currentStageIndex].camera, t)
+        );
+      }
+
+      if (t < 1) {
+        requestId = requestAnimationFrame(updatePosition);
+      } else {
+        // Move to the next stage once the current animation is complete
+        currentStageIndex += 1;
+        if (currentStageIndex < animationStages.length) {
+          // Start the next animation stage
+          elapsedTimeRef.current = performance.now();
+          requestAnimationFrame(updatePosition);
+        }
+      }
+    };
+
+    // Start the initial animation
+    requestAnimationFrame(updatePosition);
+
+    return () => {
+      cancelAnimationFrame(requestId);
+    };
+  }, [animationStages, animationDuration]);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1>Location Page</h1>
+      <p>Faculty ID: {id}</p>
+
+      <Canvas
+        frameloop="demand"
+        className="mt-4"
+        style={{ height: "80vh", width: "100vw" }}
+      >
+        <OrbitControls />
+        <ambientLight intensity={0.5} />
+        <directionalLight intensity={0.5} position={[1, 2, 2]} />
+        <PerspectiveCamera
+          makeDefault
+          fov={10}
+          near={10}
+          position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+        />
+        <Model />
+      </Canvas>
+    </div>
+  );
+}
+
+export default Locations;

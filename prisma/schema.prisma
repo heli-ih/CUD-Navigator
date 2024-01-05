@@ -10,9 +10,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Faculty{
-  id  Int @id @unique
-  name String 
-  position String
-  location String
+model Faculty {
+  id         Int      @id @default(autoincrement())
+  name       String
+  position   String
+  roomName   String?
+  room       Room?    @relation(fields: [roomName], references: [name])
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  faculties Faculty[]
 }
