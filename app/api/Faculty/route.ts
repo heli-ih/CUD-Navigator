@@ -6,7 +6,11 @@ const prisma = new PrismaClient();
 export async function GET(res: NextResponse) {
   console.log("in faculty GET");
   try {
-    const faculties = await prisma.faculty.findMany();
+    const faculties = await prisma.faculty.findMany({
+      include: {
+        room: true,
+      },
+    });
     return new NextResponse(JSON.stringify(faculties), { status: 200 });
   } catch (error) {
     console.error("Error fetching faculty data:", error);

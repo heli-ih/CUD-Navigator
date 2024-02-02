@@ -6,12 +6,14 @@ import { FaCog, FaUserCircle } from "react-icons/fa";
 import Link from "next/link";
 import { Profile } from "@components/Profile";
 import { useEffect, useState } from "react";
+import { Room } from "./administration/page";
 
 export interface Faculty {
   id: number;
   name: string;
   position: string;
   roomName: string;
+  room: Room;
 }
 
 export default function Home() {
@@ -59,7 +61,7 @@ export default function Home() {
         {/* result list */}
         <ul className=" bg-slate-50 rounded-md  border border-gray-800">
           {faculties.map((faculty) => (
-            <a href={`/locations/${faculty.id}`}>
+            <a href={`/locations/${faculty.room?.id}`}>
               <li className="flex flex-row items-center m-4 px-5 py-3 roun rounded-md bg-slate-200">
                 {/* <Image
                   className="rounded-md"
@@ -69,11 +71,9 @@ export default function Home() {
                   height={60}
                 /> */}
                 <FaUserCircle size="75px" />
-                <div className="flex flex-col justify-between ml-4">
-                  <h5 className="text-md font-bold">{faculty.name}</h5>
-                  <p className="text-sm">{faculty.position}</p>
+                <Profile selectedFac={faculty}>
                   <p className="text-sm">{faculty.roomName}</p>
-                </div>
+                </Profile>
               </li>
             </a>
           ))}

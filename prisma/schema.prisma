@@ -22,4 +22,5 @@ model Room {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   faculties Faculty[]
+  path      Json
 }

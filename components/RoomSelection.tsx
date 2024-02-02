@@ -6,7 +6,6 @@ import "@styles/globals.css";
 
 interface RoomSelectionProps {
   selectedFac: Faculty;
-
   room: Room[];
   setRoom: (room: Room[]) => void;
 }
@@ -36,6 +35,8 @@ function RoomSelection({ selectedFac, room, setRoom }: RoomSelectionProps) {
       method: "PATCH",
       body: JSON.stringify({ newRoom: newRoom, selectedFacId: selectedFacId }),
     });
+
+    window.location.reload();
   }
 
   return (
