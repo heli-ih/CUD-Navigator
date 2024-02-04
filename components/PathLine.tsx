@@ -19,7 +19,7 @@ export default function PathLine({ roomId }: PathLineProps) {
         const selectedRoom =
           data.find((r: Room) => r.id === Number(roomId))?.path || [];
 
-        setCoordinations(JSON.parse(selectedRoom));
+        setCoordinations(selectedRoom);
       } catch (error) {
         console.error("Error fetching room data:", error);
       }
