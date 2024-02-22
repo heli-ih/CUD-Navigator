@@ -1,6 +1,6 @@
 ## CUD Interactive Indoor Navigator
 
-CUD Interactive Indoor Navigator is an innovative application integrating routing concepts from Next.js to enhance user experience and streamline indoor navigation. Developed by a proficient Full-Stack developer, it offers efficient navigation within indoor spaces with immersive features powered by React Three Fiber.
+CUD Interactive Indoor Navigator is an innovative application integrating routing concepts from Next.js to enhance user experience and streamline indoor navigation. It offers efficient navigation within indoor spaces with immersive features powered by React Three Fiber.
 
 ## Key Features:
 
