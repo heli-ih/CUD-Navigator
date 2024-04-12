@@ -1,37 +1,40 @@
 import { Line } from "@react-three/drei";
 import { Vector3 } from "three";
 import React, { useState, useEffect } from "react";
-import { Room } from "@app/administration/page";
+import { Location } from "@app/page";
+
+import { useSpring, animated } from "@react-spring/web";
 
 interface PathLineProps {
-  roomId: String;
+  id: String;
 }
 
-export default function PathLine({ roomId }: PathLineProps) {
+export default function PathLine({ id }: PathLineProps) {
   const [progress, setProgress] = useState(0);
   const [coordinations, setCoordinations] = useState<String[]>([]);
 
   useEffect(() => {
-    const fetchRoomData = async () => {
+    const fetchLocationData = async () => {
       try {
-        const response = await fetch("/api/Room");
+        const response = await fetch("/api/Location");
         const data = await response.json();
-        const selectedRoom =
-          data.find((r: Room) => r.id === Number(roomId))?.path || [];
 
-        setCoordinations(selectedRoom);
+        const selectedLocation =
+          data.find((r: Location) => r.id === Number(id))?.path || [];
+
+        setCoordinations(selectedLocation);
       } catch (error) {
-        console.error("Error fetching room data:", error);
+        console.error("Error fetching location data:", error);
       }
     };
 
-    fetchRoomData();
-  }, [roomId]);
+    fetchLocationData();
+  }, [id]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress((prevProgress) => Math.min(prevProgress + 0.01, 1));
-    }, 20);
+      setProgress((prevProgress) => Math.min(prevProgress + 0.01, 5));
+    }, 5);
 
     return () => clearInterval(interval);
   }, []);
@@ -44,7 +47,17 @@ export default function PathLine({ roomId }: PathLineProps) {
     (c) => new Vector3(Number(c[0]), Number(c[1]), Number(c[2]))
   );
 
-  const slicedPathPoints = pathPoints.slice(0, Math.floor(progress * 4) + 1);
+  const slicedPathPoints = pathPoints.slice(
+    0,
+    Math.floor(progress * pathPoints.length) + 1
+  );
 
   return <Line points={slicedPathPoints} color="blue" lineWidth={3} />;
 }
+
+// const pathPoints = [
+//   new Vector3(9.2, -665, 1188),
+//   new Vector3(8.7, -633, 1178.7),
+//   new Vector3(-31, -605, 1170.8),
+//   new Vector3(-31, -602, 1170.7),
+// ];

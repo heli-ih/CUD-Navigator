@@ -5,8 +5,12 @@ export default function Map() {
 
   return (
     <mesh>
-      <hemisphereLight intensity={1} groundColor="black" />
-      <primitive object={map.scene} position={[-420, -390, 600]} />
+      <hemisphereLight intensity={1.5} />
+      <primitive
+        object={map.scene}
+        position={[-150, -640, 1180]}
+        rotation={[Math.PI / 2.4, Math.PI / 145, 0]}
+      />
     </mesh>
   );
 }
