@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  background-image: url("/map.jpg");
+  background-image: url("https://firebasestorage.googleapis.com/v0/b/cud-nav.appspot.com/o/map.jpg?alt=media&token=2fdfe3aa-1f0e-44a8-9330-1e0b5f99d5c4");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;

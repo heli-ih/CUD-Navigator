@@ -16,6 +16,7 @@ export interface Person {
   position: string;
   LocationTag: string;
   location: Location;
+  photo: string;
 }
 export interface Location {
   id: number;
@@ -48,18 +49,29 @@ export default function Home() {
     fetchData();
   }, []);
 
-  console.log(locations);
   const handleSearchInput = async (value: string) => {
     try {
-      const response = await fetch(`/api/Person`);
-      const data = await response.json();
-      const searchTerm = value.toLowerCase().trim();
+      const locationResponse = await fetch(`/api/Location`);
+      const locationData = await locationResponse.json();
+      const locationSearchTerm = value.toLowerCase().trim();
 
-      const searchResults = data.filter((record: Person) =>
-        new RegExp(searchTerm, "i").test(record.name)
+      // Filter locations based on persons' names and location name
+      const locationSearchResults = locationData.filter(
+        (location: Location) => {
+          // Check if location has persons
+          if (location.persons.length > 0) {
+            return location.persons.some((person: Person) =>
+              person.name.toLowerCase().includes(locationSearchTerm)
+            );
+          } else {
+            // If no persons, check location name
+            return location.name.toLowerCase().includes(locationSearchTerm);
+          }
+        }
       );
 
-      setPersons(searchResults);
+      // Update state with results
+      setLocations(locationSearchResults);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
@@ -70,7 +82,12 @@ export default function Home() {
       {/* Navbar */}
       <div className="flex items-center w-full bg-gray-800 h-24 px-20">
         <div>
-          <Image src="/CUDlogo.png" alt="CUDlogo" width={200} height={60} />
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/cud-nav.appspot.com/o/CUDlogo.png?alt=media&token=de003185-8ef8-4aaa-962d-4b3b9bb6d1af"
+            alt="CUDlogo"
+            width={200}
+            height={60}
+          />
         </div>
       </div>
       {/* Search List */}
@@ -98,8 +115,15 @@ export default function Home() {
                   loc.persons.map((person) => (
                     <a href={`/locations/${loc.id}`} key={person.id}>
                       <li className="flex flex-row items-center justify-center m-4 px-5 py-3 rounded-md bg-slate-200">
-                        <FaUserCircle size="75px" />
-                        <div className="flex flex-col justify-between items-start w-full p-2 ml-2">
+                        {/* <FaUserCircle size="75px" /> */}
+                        <img
+                          src={person.photo}
+                          alt="photo"
+                          width={70}
+                          height={70}
+                          className="rounded-full border-2 border-black"
+                        />
+                        <div className="flex flex-col items-start w-full p-2 ml-2">
                           <h5 className="text-md font-bold">{person.name}</h5>
                           <p className="text-sm">{person.position}</p>
                           <p className="text-sm">{person.LocationTag}</p>
