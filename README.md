@@ -1,4 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## CUD Interactive Indoor Navigator
+
+CUD Interactive Indoor Navigator is an innovative application integrating routing concepts from Next.js to enhance user experience and streamline indoor navigation. It offers efficient navigation within indoor spaces with immersive features powered by React Three Fiber.
+
+## Key Features:
+
+Incorporates Next.js for efficient routing
+Enhances user experience with immersive features
+Seamlessly navigates indoor spaces
+Utilizes React Three Fiber for immersive visualization
+
+## Technologies:
+Built with Next.js, React, TailwindCSS, Prisma, PostgreSQL, and React Three Fiber.
+
+## Usage:
+To use CUD Interactive Indoor Navigator, clone the repository and follow the installation instructions provided in the README.md file.
+
+
+
 
 ## Getting Started
 
